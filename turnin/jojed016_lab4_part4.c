@@ -70,12 +70,7 @@ void Tick() {
 	    break;
 
 	case Y_PRESS:
-	    if (!lock && !x && y && !hash) {
-                state = Y_PRESS;
-            }
-            else {
-                state = WAIT;
-            }
+            state = WAIT;
 	    break;
 
 	case LOCK:
