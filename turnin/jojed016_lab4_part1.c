@@ -61,10 +61,10 @@ void Tick() {
         case START:
             PORTB = 0x01;
             break;
-        case OFF_RELEASE:
+        case OFF_PRESS:
             PORTB = 0x01;
             break;
-        case ON_RELEASE:
+        case ON_PRESS:
             PORTB = 0x02;
             break;
         default:
