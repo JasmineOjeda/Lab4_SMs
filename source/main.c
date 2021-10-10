@@ -72,7 +72,7 @@ void Tick() {
                 state = RESET;
             }
             else {
-                state = INC_PRESS;
+                state = DEC_PRESS;
             }
             break;
 	case RES_PRESS:
@@ -89,7 +89,7 @@ void Tick() {
                 state = RESET;
             }
             else {
-                state = INC_PRESS;
+                state = RES_PRESS;
             }
             break;
         default:
