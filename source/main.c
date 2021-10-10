@@ -114,8 +114,12 @@ void Tick() {
         case RESET:
             PORTC = 0x00;
             break;
-        case PRESS:
+        case INC_PRESS:
 	    break;
+        case DEC_PRESS:
+            break;
+	case RES_PRESS:
+            break;
 	case WAIT:
 	    break;
 	default:
