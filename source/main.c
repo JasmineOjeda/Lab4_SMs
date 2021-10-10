@@ -12,13 +12,14 @@
 #include "simAVRHeader.h"
 #endif
 
-enum States {START, WAIT, HASH_PRESS, HASH_RELEASE, Y_PRESS, LOCK} state;
+enum States {START, WAIT, COMBO, END_COMBO, LOCK} state;
+
+unsigned char i = 0x01;
+unsigned char combo[] = {0x04, 0x01, 0x02, 0x01};
+unsigned char wasReleased = 0x00;
+unsigned char c = 0x00;
 
 void Tick() {
-    unsigned char x = PINA & 0x01;
-    unsigned char y = (PINA & 0x02) >> 1;
-    unsigned char hash = (PINA & 0x04) >> 2;
-    unsigned char lock = (PINA & 0x80) >> 7;
 
     /* State transitions */
     switch(state) {
@@ -28,10 +29,10 @@ void Tick() {
 	    break;
 
 	case WAIT:
-	    if (!lock && !x && !y && hash) {
-                state = HASH_PRESS;
+	    if (PINA == 0x04) {
+                state = COMBO;
             }
-	    else if (lock && !x && !y && !hash) {
+	    else if (PINA == 0x80) {
                 state = LOCK;
             }
 	    else {
@@ -39,37 +40,39 @@ void Tick() {
             }
 	    break;
 
-	case HASH_PRESS:
-	    if (!lock && !x && !y && hash) { 
-                state = HASH_PRESS;
+	case COMBO:
+	    c = combo[i];
+            
+	    if (PINA == c) {
+                if (i == 3) {
+	            i = 1;
+                    state = END_COMBO;
+		}
+		else {
+                    i++;
+		    wasReleased = 0x00;
+		    state = COMBO;
+	        }
             }
-            else if (!lock && !x && !y && !hash) {
-                state = HASH_RELEASE;
-            }
-	    else if (lock && !x && !y && !hash) {
-                state = LOCK;
-            }
-            else {
-                state = WAIT;
-            }
-	    break;
-
-	case HASH_RELEASE:
-	    if (!lock && !x && !y && !hash) {
-                state = HASH_RELEASE;
-            }
-            else if (!lock && !x && y && !hash) {
-                state = Y_PRESS;
+	    else if (PINA == 0x00) {
+		wasReleased = 0x01;
+	        state = COMBO;
 	    }
-            else if (lock && !x && !y && !hash) {
+	    else if ((PINA == combo[i-1]) && !wasReleased) {
+                state = COMBO;
+            }
+	    else if (PINA == 0x80) {
+		i = 1;
                 state = LOCK;
             }
-            else {
+	    else {
+		i = 1;
                 state = WAIT;
             }
+
 	    break;
 
-	case Y_PRESS:
+	case END_COMBO:
             state = WAIT;
 	    break;
 
@@ -91,15 +94,11 @@ void Tick() {
 	    PORTC = 0x01;
 	    break;
 
-	case HASH_PRESS:
-	    PORTC = 0x02;
-	    break;
-
-	case HASH_RELEASE:
+	case COMBO:
 	    PORTC = 0x03;
 	    break;
 
-	case Y_PRESS:
+	case END_COMBO:
 	    PORTC = 0x04;
 
 	    if (PORTB) {
