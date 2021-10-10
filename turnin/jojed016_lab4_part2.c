@@ -51,6 +51,9 @@ void Tick() {
             if (PINA == 0x00) {
                 state = WAIT;
             }
+	    else if (PINA == 0x03) {
+                state = RESET;
+            }
             else {
                 state = PRESS;
             }
