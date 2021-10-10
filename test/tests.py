@@ -16,13 +16,13 @@
 # to be scoped at the function level (for static variables) if there are naming conflicts. The 
 # variables listed here will display everytime you hit (and stop at) a breakpoint
 
-tests = [ {'description': 'PINA:0x00 => PORTB:0x01',
+tests = [ {'description': 'PINA:0x00 => PORTC:0x07',
     'steps': [ {'inputs': [('PINA', 0x00)], 'iterations': 5 } ],
-    'expected': [('PORTB', 0x01)],
+    'expected': [('PORTC', 0x07)],
     },
-    {'description': 'PINA:0x01 => PORTB:0x02',
+    {'description': 'PINA:0x01 => PORTC:0x08',
     'steps': [ {'inputs': [('PINA', 0x01)], 'iterations': 5 } ],
-    'expected': [('PORTB', 0x02)],
+    'expected': [('PORTC', 0x08)],
     },
     {'description': 'PINA:0x00 => PORTB:0x02',
     'steps': [ {'inputs': [('PINA', 0x00)], 'iterations': 5 } ],
