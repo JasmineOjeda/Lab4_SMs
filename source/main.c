@@ -58,6 +58,9 @@ void Tick() {
 
     /* State actions */
     switch(state) {
+        case START:
+            PORTB = 0x01;
+            break;
         case OFF_RELEASE:
             PORTB = 0x01;
             break;
@@ -74,7 +77,6 @@ int main(void) {
     DDRA = 0x00; PORTA = 0xFF;
     DDRB = 0xFF; PORTB = 0x00;
 
-    PORTB = 0x01;
     /* Insert your solution below */
     while (1) {
         Tick();
