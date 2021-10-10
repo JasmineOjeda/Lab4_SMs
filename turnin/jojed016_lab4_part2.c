@@ -12,7 +12,7 @@
 #include "simAVRHeader.h"
 #endif
 
-enum States {START, WAIT, INCREMENT, DECREMENT, PRESS, RESET} state;
+enum States {START, WAIT, INCREMENT, DECREMENT, INC_PRESS, DEC_PRESS, RES_PRESS, RESET} state;
 
 void Tick() {
     /* State transitions */
@@ -39,23 +39,57 @@ void Tick() {
             }
             break;
         case INCREMENT:
-            state = PRESS;
+            state = INC_PRESS;
             break;
         case DECREMENT:
-            state = PRESS;
+            state = DEC_PRESS;
             break;
         case RESET:
-            state = PRESS;
+            state = RES_PRESS;
             break;
-        case PRESS:
+        case INC_PRESS:
             if (PINA == 0x00) {
                 state = WAIT;
             }
+	    else if (PINA == 0x02) {
+                state = DECREMENT;
+	    }
 	    else if (PINA == 0x03) {
                 state = RESET;
             }
             else {
-                state = PRESS;
+                state = INC_PRESS;
+            }
+            break;
+	case DEC_PRESS:
+            if (PINA == 0x00) {
+                state = WAIT;
+            }
+            else if (PINA == 0x01) {
+                state = INCREMENT;
+            }
+            else if (PINA == 0x03) {
+                state = RESET;
+            }
+            else {
+                state = INC_PRESS;
+            }
+            break;
+	case RES_PRESS:
+            if (PINA == 0x00) {
+                state = WAIT;
+            }
+	    else if (PINA == 0x01) {
+                state = INCREMENT;
+            }
+            else if (PINA == 0x02) {
+                state = DECREMENT;
+            }
+            else if (PINA == 0x03) {
+                state = RESET;
+            }
+            else {
+                state = INC_PRESS;
             }
             break;
         default:
